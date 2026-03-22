@@ -1,4 +1,40 @@
-# data.py - US Predictive Supply Chain Risk Mapper
+# data.py - Handles supply chain data (SQL, Neo4j, API, or mock)
+
+import pandas as pd
+import numpy as np
+
+def get_supply_data(source: str = "mock") -> pd.DataFrame:
+    """
+    Returns a DataFrame ready for predict_risk().
+
+    Parameters:
+        source (str): "mock", "sql", "neo4j", "api" (default="mock")
+
+    Returns:
+        pd.DataFrame: supply chain data with columns ['vendor', 'region', 'metric1', 'metric2', ...]
+    """
+    if source == "mock":
+        # Generate mock data for testing
+        np.random.seed(42)
+        df = pd.DataFrame({
+            "vendor": [f"Vendor {i}" for i in range(1, 11)],
+            "region": np.random.choice(["North", "South", "East", "West"], size=10),
+            "metric1": np.random.uniform(0, 100, size=10),
+            "metric2": np.random.uniform(0, 50, size=10)
+        })
+    elif source == "sql":
+        # TODO: Connect to SQL and fetch data
+        df = pd.DataFrame()  # placeholder
+    elif source == "neo4j":
+        # TODO: Connect to Neo4j and fetch data
+        df = pd.DataFrame()  # placeholder
+    elif source == "api":
+        # TODO: Call APIs and fetch data
+        df = pd.DataFrame()  # placeholder
+    else:
+        raise ValueError("Invalid data source. Choose 'mock', 'sql', 'neo4j', or 'api'.")
+
+    return df# data.py - US Predictive Supply Chain Risk Mapper
 # Added modular interface for fetching supply chain data from SQL, Neo4j, and APIs
 
 import pandas as pd
