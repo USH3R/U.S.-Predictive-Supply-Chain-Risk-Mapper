@@ -1,6 +1,5 @@
 #!/bin/bash
 # run.sh - US Predictive Supply Chain Risk Mapper
-# One-command setup and run
 
 echo "Initializing Python environment..."
 
