@@ -1,4 +1,27 @@
-# data.py - Handles supply chain data (SQL, Neo4j, API, or mock)
+# data.py - Modular data interface for US Predictive Supply Chain Risk Mapper
+import pandas as pd
+
+try:
+    from mock_data import get_mock_data
+    USE_MOCK = True
+except ImportError:
+    USE_MOCK = False
+
+def get_supply_data(source="real"):
+    """
+    Returns supply chain data as DataFrame.
+    If mock_data.py exists, it will be used for testing.
+    """
+    if USE_MOCK or source == "mock":
+        return get_mock_data()
+    
+    # Placeholder for real SQL / Neo4j / API integration
+    # Example:
+    # df_sql = pd.read_sql("SELECT * FROM supply_table", connection)
+    # df_neo4j = run_cypher_query(...).to_dataframe()
+    # df_api = pd.json_normalize(requests.get(api_url).json())
+    
+    return pd.DataFrame()  # Empty placeholder for real data# data.py - Handles supply chain data (SQL, Neo4j, API, or mock)
 
 import pandas as pd
 import numpy as np
