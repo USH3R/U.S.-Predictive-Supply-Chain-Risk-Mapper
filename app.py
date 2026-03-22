@@ -1,164 +1,83 @@
 # app.py - US Predictive Supply Chain Risk Mapper
-# Added Dash dashboard using modular data.py interface
+# Full modular app using data.py + model.py
 
-import dash
-from dash import dcc, html, Output, Input
-import plotly.express as px
+from dash import Dash, dcc, html, Input, Output
 from data import get_supply_data
-
-# ------------------------------
-# Initialize Dash app
-# ------------------------------
-app = dash.Dash(__name__)
-app.title = "US Predictive Supply Chain Risk Mapper"
-
-# ------------------------------
-# Sample options for dropdowns
-# (Replace with dynamic lists from your database/API if desired)
-# ------------------------------
-vendors = ["Vendor A", "Vendor B", "Vendor C"]
-regions = ["North", "South", "East", "West"]
-
-# ------------------------------
-# Layout
-# ------------------------------
-app.layout = html.Div([
-    html.H1("US Predictive Supply Chain Risk Mapper"),
-    html.Div([
-        html.Label("Select Vendor:"),
-        dcc.Dropdown(id="vendor-dropdown", options=[{"label": v, "value": v} for v in vendors], value=None, multi=True),
-        html.Label("Select Region:"),
-        dcc.Dropdown(id="region-dropdown", options=[{"label": r, "value": r} for r in regions], value=None, multi=True),
-    ], style={"width": "30%", "display": "inline-block", "verticalAlign": "top"}),
-    html.Div([
-        dcc.Graph(id="risk-graph"),
-        html.Div(id="risk-details")
-    ], style={"width": "65%", "display": "inline-block", "paddingLeft": "20px"})
-])
-
-# ------------------------------
-# Callbacks
-# ------------------------------
-@app.callback(
-    Output("risk-graph", "figure"),
-    Output("risk-details", "children"),
-    Input("vendor-dropdown", "value"),
-    Input("region-dropdown", "value")
-)
-def update_dashboard(selected_vendors, selected_regions):
-    # Fetch data from modular data.py
-    df = get_supply_data(vendor=selected_vendors, region=selected_regions, source="sql")  # Change source if needed
-
-    if df.empty:
-        fig = px.scatter(title="No Data Available")
-        details = "No supply chain data available for the selected filters."
-        return fig, details
-
-    # Example risk graph
-    fig = px.scatter(
-        df,
-        x="vendor",
-        y="risk",
-        color="region",
-        size="risk",
-        hover_data=["vendor", "region", "risk"],
-        title="Supply Chain Risk by Vendor and Region"
-    )
-
-    # Example textual details
-    avg_risk = df["risk"].mean() if "risk" in df.columns else None
-    details = f"Average Risk Score: {avg_risk:.2f}" if avg_risk is not None else "Risk data unavailable."
-
-    return fig, details
-
-# ------------------------------
-# Run the app
-# ------------------------------
-if __name__ == "__main__":
-    app.run(debug=True)  # Use app.run() for Dash v2+# app.py - US Predictive Supply Chain Risk Mapper
-
-import dash
-from dash import dcc, html, Output, Input
-import plotly.graph_objects as go
+from model import predict_risk, risk_summary
 import pandas as pd
 
-# Import the updated model
-from model import SupplyChainRiskModel
-
-# Initialize Dash app
-app = dash.Dash(__name__)
+# -------------------------
+# Initialize Dash App
+# -------------------------
+app = Dash(__name__)
 app.title = "US Predictive Supply Chain Risk Mapper"
 
-# Initialize the predictive model
-model = SupplyChainRiskModel()
+# -------------------------
+# Load and process data
+# -------------------------
+df = get_supply_data("mock")  # Pull mock data
+df = predict_risk(df)         # Add 'risk' column for visualization
 
-# Placeholder dataset for now (replace with real SQL/Neo4j/API data later)
-data = pd.DataFrame({
-    "Vendor": ["Vendor A", "Vendor B", "Vendor C"],
-    "Region": ["North", "South", "West"],
-    "Supply Volume": [1000, 1500, 800]
-})
-
-# Layout
+# -------------------------
+# App Layout
+# -------------------------
 app.layout = html.Div([
-    html.H1("US Predictive Supply Chain Risk Mapper"),
-    
-    html.Div([
-        html.Label("Select Vendor:"),
-        dcc.Dropdown(
-            id="vendor-dropdown",
-            options=[{"label": v, "value": v} for v in data["Vendor"]],
-            value=data["Vendor"].iloc[0]
-        )
-    ], style={"width": "300px", "margin-bottom": "20px"}),
-    
-    html.Div([
-        html.Label("Select Region:"),
-        dcc.Dropdown(
-            id="region-dropdown",
-            options=[{"label": r, "value": r} for r in data["Region"]],
-            value=data["Region"].iloc[0]
-        )
-    ], style={"width": "300px", "margin-bottom": "20px"}),
+    html.H1("US Predictive Supply Chain Risk Mapper", style={'textAlign': 'center'}),
+    html.H2(f"Average Risk: {risk_summary(df)['average_risk']:.2f}", style={'textAlign': 'center'}),
 
-    dcc.Graph(id="risk-graph"),
-    html.Div(id="risk-details", style={"margin-top": "20px", "font-weight": "bold"})
+    # Dropdown to filter by region
+    html.Label("Select Region:"),
+    dcc.Dropdown(
+        id='region-dropdown',
+        options=[{'label': r, 'value': r} for r in sorted(df['region'].unique())],
+        value=None,
+        placeholder="All regions",
+        multi=False
+    ),
+
+    # Bar chart of risk scores
+    dcc.Graph(id="risk-bar"),
+
+    # Table of vendor metrics and risk
+    html.H3("Vendor Risk Details"),
+    dcc.Graph(id="risk-table")
 ])
 
+# -------------------------
 # Callbacks
+# -------------------------
 @app.callback(
-    Output("risk-graph", "figure"),
-    Output("risk-details", "children"),
-    Input("vendor-dropdown", "value"),
-    Input("region-dropdown", "value")
+    Output('risk-bar', 'figure'),
+    Output('risk-table', 'figure'),
+    Input('region-dropdown', 'value')
 )
-def update_dashboard(vendor, region):
-    # Filter placeholder dataset
-    filtered = data[(data["Vendor"] == vendor) & (data["Region"] == region)]
-    
-    # Convert to numeric array for prediction
-    numeric_data = filtered[["Supply Volume"]].values if not filtered.empty else None
-    
-    # Predict risk using the model
-    risk_score = model.predict(numeric_data) if numeric_data is not None else 0.5
-    
-    # Create risk graph
-    fig = go.Figure(go.Bar(
-        x=[vendor],
-        y=[risk_score],
-        marker_color="red" if risk_score > 0.7 else "orange" if risk_score > 0.4 else "green"
-    ))
-    fig.update_layout(
-        title=f"Predicted Supply Chain Risk Score for {vendor} ({region})",
-        yaxis=dict(range=[0, 1], title="Risk Score"),
-        xaxis=dict(title="Vendor")
-    )
-    
-    # Risk details text
-    details = f"Predicted Risk Score: {risk_score:.2f}"
-    
-    return fig, details
+def update_dashboard(selected_region):
+    # Filter data if a region is selected
+    filtered_df = df if not selected_region else df[df['region'] == selected_region]
 
-# Run server
+    # Bar chart for risk scores
+    bar_fig = {
+        "data": [
+            {"x": filtered_df["vendor"], "y": filtered_df["risk"], "type": "bar", "name": "Risk Score"}
+        ],
+        "layout": {"title": f"Predicted Risk per Vendor ({selected_region if selected_region else 'All Regions'})"}
+    }
+
+    # Table of metrics + risk
+    table_fig = {
+        "data": [
+            {
+                "type": "table",
+                "header": {"values": list(filtered_df.columns), "fill_color": "paleturquoise"},
+                "cells": {"values": [filtered_df[col] for col in filtered_df.columns], "fill_color": "lavender"}
+            }
+        ]
+    }
+
+    return bar_fig, table_fig
+
+# -------------------------
+# Run the app
+# -------------------------
 if __name__ == "__main__":
     app.run(debug=True)
