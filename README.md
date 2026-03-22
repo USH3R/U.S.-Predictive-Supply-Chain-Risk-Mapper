@@ -15,5 +15,7 @@ Python – scraping, processing, predictive modeling, backend logic
 SQL – storing vendor data, CVEs, risk scores
 Dash (Python library) – front-end dashboard and visualizations
 - Optional / advanced later:
+
 Neo4j – graph database for supply chain relationships
+
 Docker – containerization for easy deployment
