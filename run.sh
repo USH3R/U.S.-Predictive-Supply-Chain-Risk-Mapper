@@ -1,20 +1,10 @@
 #!/bin/bash
+# run.sh - US Predictive Supply Chain Risk Mapper
+# Sets up environment, installs packages, and runs the app
 
-# ----------------------------------------
-# US Predictive Supply Chain Risk Mapper
-# Run Script
-#
-# This script:
-# 1. Creates a Python virtual environment
-# 2. Installs required libraries
-# 3. Starts the Dash dashboard
-#
-# Hackathon goal: one-command startup
-# ----------------------------------------
+echo "Initializing Python environment..."
 
-echo "Setting up Python environment..."
-
-# Check if virtual environment exists, create if not
+# Create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
     python3 -m venv venv
     echo "Virtual environment created."
@@ -23,9 +13,13 @@ fi
 # Activate virtual environment
 source venv/bin/activate
 
-echo "Installing required Python packages..."
+# Upgrade pip
 pip install --upgrade pip
+
+# Install all required packages
+echo "Installing required Python packages..."
 pip install -r requirements.txt
 
-echo "Starting the Dashboard..."
+# Run the Dash app
+echo "Launching the dashboard..."
 python app.py
