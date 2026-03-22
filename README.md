@@ -12,7 +12,8 @@ The **US Predictive Supply Chain Risk Mapper** is a hackathon-ready cybersecurit
 ---
 ## How to Run the Application
 
-1. Open Codespace (Github) or any terminal and type this:
+**1. In Codespaces (recommended)**
+Open your Codespace terminal and type:
          
          bash run.sh
          
