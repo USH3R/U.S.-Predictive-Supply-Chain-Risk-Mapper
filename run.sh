@@ -1,6 +1,6 @@
 #!/bin/bash
 # run.sh - US Predictive Supply Chain Risk Mapper
-# Sets up environment, installs packages, and runs the app
+# One-command setup and run
 
 echo "Initializing Python environment..."
 
@@ -16,10 +16,9 @@ source venv/bin/activate
 # Upgrade pip
 pip install --upgrade pip
 
-# Install all required packages
 echo "Installing required Python packages..."
 pip install -r requirements.txt
 
+echo "Launching the US Predictive Supply Chain Risk Mapper dashboard..."
 # Run the Dash app
-echo "Launching the dashboard..."
 python app.py
