@@ -1,76 +1,92 @@
-# data.py - Data handling for US Predictive Supply Chain Risk Mapper
-# Load and preprocess data from SQL, Neo4j, or APIs
+# data.py - US Predictive Supply Chain Risk Mapper
+# Added modular interface for fetching supply chain data from SQL, Neo4j, and APIs
 
 import pandas as pd
+from sqlalchemy import create_engine
+from neo4j import GraphDatabase
+import requests
 
-# ---------- SQL Example Placeholder ----------
-def load_sql_data():
+# ------------------------------
+# SQL Configuration
+# ------------------------------
+SQL_URI = "postgresql://username:password@host:port/database"
+SQL_TABLE = "supply_chain_data"
+
+# ------------------------------
+# Neo4j Configuration
+# ------------------------------
+NEO4J_URI = "neo4j://localhost:7687"
+NEO4J_USER = "neo4j"
+NEO4J_PASSWORD = "password"
+
+# ------------------------------
+# API Configuration
+# ------------------------------
+API_URL = "https://api.supplychain.example.com/data"
+API_KEY = "your_api_key_here"
+
+# ------------------------------
+# Main function for app.py
+# ------------------------------
+def get_supply_data(vendor=None, region=None, source="sql"):
     """
-    Connects to a SQL database and retrieves supply chain data.
-    Replace with real connection string and query.
+    Fetch supply chain data from the selected source and return as a Pandas DataFrame.
+
+    Parameters:
+        vendor (str, optional): Filter by vendor name.
+        region (str, optional): Filter by region name.
+        source (str): "sql", "neo4j", or "api".
+
+    Returns:
+        pd.DataFrame: DataFrame containing the requested supply chain data.
     """
-    # Example placeholder
-    # import sqlalchemy
-    # engine = sqlalchemy.create_engine("postgresql://user:pass@host:port/dbname")
-    # df = pd.read_sql("SELECT * FROM suppliers", engine)
-    
-    # Temporary placeholder
-    df = pd.DataFrame({
-        "Supplier": ["Supplier A", "Supplier B", "Supplier C"],
-        "Region": ["North", "South", "East"],
-        "Risk Score": [0.2, 0.5, 0.7],
-        "Lead Time": [5, 10, 7]
-    })
+    if source.lower() == "sql":
+        return _get_sql_data(vendor, region)
+    elif source.lower() == "neo4j":
+        return _get_neo4j_data(vendor, region)
+    elif source.lower() == "api":
+        return _get_api_data(vendor, region)
+    else:
+        raise ValueError("Invalid data source. Choose 'sql', 'neo4j', or 'api'.")
+
+# ------------------------------
+# Internal helper functions
+# ------------------------------
+def _get_sql_data(vendor=None, region=None):
+    """Fetch data from SQL database."""
+    engine = create_engine(SQL_URI)
+    query = f"SELECT * FROM {SQL_TABLE}"
+    filters = []
+    if vendor:
+        filters.append(f"vendor = '{vendor}'")
+    if region:
+        filters.append(f"region = '{region}'")
+    if filters:
+        query += " WHERE " + " AND ".join(filters)
+    df = pd.read_sql(query, engine)
     return df
 
-# ---------- Neo4j Example Placeholder ----------
-def load_neo4j_data():
-    """
-    Connects to a Neo4j graph database to retrieve supplier dependencies.
-    Replace with real connection and queries.
-    """
-    # Example placeholder
-    # from neo4j import GraphDatabase
-    # driver = GraphDatabase.driver(uri="bolt://host:7687", auth=("user", "pass"))
-    # with driver.session() as session:
-    #     result = session.run("MATCH (s:Supplier)-[:SUPPLIES]->(c:Company) RETURN s.name, c.name")
-    #     df = pd.DataFrame([dict(record) for record in result])
-    
-    # Temporary placeholder
-    df = pd.DataFrame({
-        "Supplier": ["Supplier A", "Supplier B"],
-        "Depends On": ["Supplier X", "Supplier Y"],
-        "Dependency Type": ["Raw Material", "Component"]
-    })
-    return df
+def _get_neo4j_data(vendor=None, region=None):
+    """Fetch data from Neo4j graph database."""
+    driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
+    with driver.session() as session:
+        cypher = "MATCH (s:SupplyChain) RETURN s.vendor AS vendor, s.region AS region, s.risk AS risk"
+        if vendor or region:
+            conditions = []
+            if vendor:
+                conditions.append(f"s.vendor = '{vendor}'")
+            if region:
+                conditions.append(f"s.region = '{region}'")
+            cypher += " WHERE " + " AND ".join(conditions)
+        result = session.run(cypher)
+        records = [record.data() for record in result]
+    driver.close()
+    return pd.DataFrame(records)
 
-# ---------- API Example Placeholder ----------
-def load_api_data():
-    """
-    Fetches supply chain risk data from external APIs.
-    Replace URLs and API keys with real endpoints.
-    """
-    # Example placeholder
-    # import requests
-    # response = requests.get("https://api.supplychainrisk.com/data?apikey=YOUR_API_KEY")
-    # df = pd.DataFrame(response.json())
-    
-    # Temporary placeholder
-    df = pd.DataFrame({
-        "Supplier": ["Supplier A", "Supplier C"],
-        "External Risk Score": [0.3, 0.6]
-    })
-    return df
-
-# ---------- Unified Data Loader ----------
-def load_data():
-    """
-    Combines SQL, Neo4j, and API data into a single DataFrame.
-    """
-    sql_df = load_sql_data()
-    neo_df = load_neo4j_data()
-    api_df = load_api_data()
-
-    # Merge SQL and API data as an example
-    merged_df = pd.merge(sql_df, api_df, on="Supplier", how="left")
-    return merged_df
+def _get_api_data(vendor=None, region=None):
+    """Fetch data from an external API."""
+    params = {"vendor": vendor, "region": region, "api_key": API_KEY}
+    response = requests.get(API_URL, params=params)
+    response.raise_for_status()
+    data = response.json()
+    return pd.DataFrame(data)
