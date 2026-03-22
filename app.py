@@ -1,5 +1,4 @@
-# app.py - US Predictive Supply Chain Risk Mapper
-# Full modular app using data.py + model.py
+# app.py - US Predictive Supply Chain Risk Mapper. Full modular app using data.py + model.py
 
 from dash import Dash, dcc, html, Input, Output
 from data import get_supply_data
