@@ -1,4 +1,6 @@
-# model.py - US Predictive Supply Chain Risk Mapper: added modular risk prediction interface, added DataFrame which nd returns predicted risk scores
+# model.py - US Predictive Supply Chain Risk Mapper
+# added modular risk prediction interface
+# added DataFrame which returns predicted risk scores
 
 import pandas as pd
 import numpy as np
