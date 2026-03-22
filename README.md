@@ -1,4 +1,5 @@
 Hackathon-Friendly Architecture (Markdown-Friendly)
+
 +-------------------+
 |   Vendor Data     |
 | (CVE feeds, APIs, |
