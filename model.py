@@ -1,27 +1,43 @@
-# model.py
-# Predictive model placeholder for US Predictive Supply Chain Risk Mapper
+# model.py - US Predictive Supply Chain Risk Mapper
+# Placeholder for ML/AI models predicting supply chain risk
 
-from sklearn.ensemble import RandomForestRegressor
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
 
-# ----------------------------
-# Train dummy model
-# ----------------------------
-def train_model(df, features, target):
+# ---------- Example function: train a predictive model ----------
+def train_risk_model(data: pd.DataFrame, target_column: str):
     """
-    Train a dummy model (RandomForest placeholder)
+    Train a RandomForest model to predict supply chain risk.
+    Returns trained model and feature scaler.
     """
-    model = RandomForestRegressor(n_estimators=10, random_state=42)
-    model.fit(df[features], df[target])
-    return model
+    X = data.drop(columns=[target_column])
+    y = data[target_column]
 
-# ----------------------------
-# Predict risk
-# ----------------------------
-def predict_risk(df):
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2, random_state=42)
+    
+    model = RandomForestClassifier(n_estimators=100, random_state=42)
+    model.fit(X_train, y_train)
+    
+    score = model.score(X_test, y_test)
+    print(f"Model trained. Accuracy on test set: {score:.2f}")
+    
+    return model, scaler
+
+# ---------- Example function: predict risk ----------
+def predict_risk(model, scaler, new_data: pd.DataFrame):
     """
-    Adds a 'predicted_risk' column.
-    Currently a placeholder: copies risk_score.
+    Predict supply chain risk on new data using the trained model.
     """
-    df['predicted_risk'] = df['risk_score']  # placeholder
-    return df
+    X_scaled = scaler.transform(new_data)
+    predictions = model.predict(X_scaled)
+    return predictions
+
+# ---------- Placeholder usage ----------
+if __name__ == "__main__":
+    print("This is the model module for US Predictive Supply Chain Risk Mapper.")
+    print("Use train_risk_model() to train models and predict_risk() for predictions.")
