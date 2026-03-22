@@ -1,4 +1,16 @@
-# mock_data.py - Simulated supply chain data
+# mock_data.py - simulated multi-source supply chain data
+
+import pandas as pd
+
+def get_mock_data():
+    # Simulate data for 3 vendors
+    data = {
+        'vendor': ['Vendor A', 'Vendor B', 'Vendor C'],
+        'region': ['North', 'South', 'West'],
+        'supply_quantity': [100, 200, 150],
+        'delivery_delay_days': [2, 5, 1]
+    }
+    return pd.DataFrame(data)# mock_data.py - Simulated supply chain data
 import pandas as pd
 import numpy as np
 
