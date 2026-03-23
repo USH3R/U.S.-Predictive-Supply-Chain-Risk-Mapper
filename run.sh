@@ -1,26 +1,23 @@
 #!/bin/bash
-# run.sh - US Predictive Supply Chain Risk Mapper
-# Sets up environment, installs packages, and runs the app
+# US Predictive Supply Chain Risk Mapper - Entry Point
 
-echo "Initializing Python environment..."
+echo "-------------------------------------------------------"
+echo "🇺🇸 INITIALIZING FEDERAL RISK MAPPER"
+echo "-------------------------------------------------------"
 
-# Create virtual environment if it doesn't exist
+# 1. Create Virtual Environment
 if [ ! -d "venv" ]; then
     python3 -m venv venv
-    echo "Virtual environment created."
+    echo "✅ Virtual environment created."
 fi
 
-# Activate virtual environment
+# 2. Activate Environment
 source venv/bin/activate
 
-# Upgrade pip
-pip install --upgrade pip
-
-# Install all required Python packages
-echo "Installing required Python packages..."
+# 3. Install Dependencies
+echo "📦 Installing Python libraries (Dash, SQL, Scikit-Learn)..."
 pip install -r requirements.txt
 
-# Launch the Dash app
-echo "Launching the US Predictive Supply Chain Risk Mapper dashboard..."
-# Using host=0.0.0.0 so Codespaces can forward the port
+# 4. Launch Application
+echo "🚀 Dashboard launching at http://127.0.0.1:8050"
 python app.py
