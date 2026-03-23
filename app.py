@@ -1,4 +1,51 @@
-# app.py - US Predictive Supply Chain Risk Mapper
+import dash
+from dash import dcc, html, dash_table
+import pandas as pd
+import plotly.express as px
+
+# Mock Data simulating the SQL/Predictive Model output
+data = {
+    "Vendor": ["SolarWinds-Alt", "Global-Secure", "Data-Bridge-Inc", "Federal-Soft"],
+    "Current_CVEs": [2, 0, 12, 5],
+    "GitHub_Leaks": ["None", "None", "3 API Keys", "1 Credential"],
+    "Predictive_Risk_Score": [0.15, 0.05, 0.88, 0.45], # 0.88 is the "Red" trigger
+}
+df = pd.DataFrame(data)
+
+app = dash.Dash(__name__)
+
+# The Layout (What appears in the browser)
+app.layout = html.Div(style={'backgroundColor': '#0a0a0a', 'color': '#e0e0e0', 'padding': '40px', 'fontFamily': 'sans-serif'}, children=[
+    html.H1("🇺🇸 US Predictive Supply Chain Risk Mapper", style={'textAlign': 'center', 'color': '#0074D9'}),
+    html.P("Federal Agency Oversight - Real-Time Vendor Threat Intelligence", style={'textAlign': 'center'}),
+    html.Hr(style={'borderColor': '#333'}),
+    
+    html.Div([
+        html.H3("Active Vendor Risk Assessment"),
+        dash_table.DataTable(
+            data=df.to_dict('records'),
+            columns=[{"name": i, "id": i} for i in df.columns],
+            style_header={'backgroundColor': '#1a1a1a', 'fontWeight': 'bold', 'border': '1px solid #333'},
+            style_cell={'backgroundColor': '#111', 'color': '#fff', 'textAlign': 'left', 'padding': '10px'},
+            style_data_conditional=[{
+                'if': {'filter_query': '{Predictive_Risk_Score} > 0.7', 'column_id': 'Predictive_Risk_Score'},
+                'backgroundColor': '#850000', 'color': 'white'
+            }]
+        )
+    ], style={'padding': '20px'}),
+
+    html.Div([
+        dcc.Graph(
+            figure=px.bar(df, x="Vendor", y="Predictive_Risk_Score", color="Predictive_Risk_Score",
+                          title="90-Day Probability of Compromise",
+                          template="plotly_dark",
+                          color_continuous_scale='Reds')
+        )
+    ])
+])
+
+if __name__ == '__main__':
+    app.run_server(debug=True)# app.py - US Predictive Supply Chain Risk Mapper
 # Full Dash app connecting data.py + model.py
 
 import dash
