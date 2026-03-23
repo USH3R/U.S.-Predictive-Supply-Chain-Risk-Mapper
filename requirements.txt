@@ -1,44 +1,5 @@
-# requirements.txt - US Predictive Supply Chain Risk Mapper
-
-# Dash framework for dashboard
-dash==4.0.0
-plotly>=6.0.0
-
-# Data handling
-pandas>=3.0.0
-numpy>=2.0.0
-sqlalchemy>=2.0.0  # For SQL connections
-
-# ML / predictive modeling
-scikit-learn>=1.8.0
-scipy>=1.10.0
-joblib>=1.5.3
-threadpoolctl>=3.6.0
-
-# Optional for API requests
-requests>=2.32.0
-charset-normalizer>=3.4.6
-idna>=3.11
-urllib3>=2.6.3
-certifi>=2026.2.25
-retrying>=1.4.0
-nest-asyncio>=1.6.0
-
-# Flask dependencies (required by Dash)
-Flask>=3.1.3,<3.2
-Werkzeug>=3.1.6,<3.2
-Jinja2>=3.1.6
-click>=8.3.1
-itsdangerous>=2.2.0
-blinker>=1.9.0
-markupsafe>=3.0.3
-
-# Metadata / utilities
-setuptools>=82.0.1
-packaging>=26.0
-importlib-metadata>=9.0.0
-typing-extensions>=4.15.0
-zipp>=3.23.0
-
-# Optional extra visualization helpers
-narwhals>=2.18.0
+dash==2.14.1
+pandas==2.1.3
+scikit-learn==1.3.2
+sqlalchemy==2.0.23
+dash-bootstrap-components==1.5.0
