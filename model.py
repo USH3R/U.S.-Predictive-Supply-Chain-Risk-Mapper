@@ -1,33 +1,27 @@
 # model.py - US Predictive Supply Chain Risk Mapper
-# Provides a modular interface for predicting supply chain risk
+# Contains the predictive model logic
 
 import pandas as pd
 import numpy as np
 
-def predict_risk(df):
+def predict_risk(df: pd.DataFrame) -> pd.DataFrame:
     """
-    Add a 'risk_score' column to the DataFrame.
-    Mock predictive model: combines delivery_days and cost.
-    
-    df: pandas DataFrame with columns 'vendor', 'region', 'delivery_days', 'cost'
-    Returns: DataFrame with additional 'risk_score' column
+    Adds a 'risk_score' column to the DataFrame.
+    Uses a simple mock formula for demonstration.
     """
     df = df.copy()
     
-    # Normalize delivery_days and cost
-    max_days = df['delivery_days'].max() if not df['delivery_days'].empty else 1
+    # Avoid division by zero
     max_cost = df['cost'].max() if not df['cost'].empty else 1
+    max_delivery = df['delivery_time'].max() if not df['delivery_time'].empty else 1
     
-    df['norm_days'] = df['delivery_days'] / max_days
-    df['norm_cost'] = df['cost'] / max_cost
+    # Mock risk score calculation (0 to 1)
+    df['risk_score'] = (
+        0.5 * (df['cost'] / max_cost) +
+        0.5 * (df['delivery_time'] / max_delivery)
+    )
     
-    # Mock risk_score: weighted combination
-    df['risk_score'] = 0.6 * df['norm_days'] + 0.4 * df['norm_cost']
-    
-    # Clip to 0-1 range
+    # Clip to 0-1 just in case
     df['risk_score'] = df['risk_score'].clip(0, 1)
-    
-    # Drop intermediate normalization columns
-    df.drop(columns=['norm_days', 'norm_cost'], inplace=True)
     
     return df
