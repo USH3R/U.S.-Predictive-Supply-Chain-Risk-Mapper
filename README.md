@@ -30,37 +30,22 @@ Run the launcher:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
 Open your browser and go to:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://localhost:8050
 
 3. If You Are Using a Random Public Terminal  
-Public terminals do not automatically have this project. You must first download or clone the repository.  
-
-    A. Option A — Clone with Git  
+Public terminals do not automatically have this project. You must first download or clone the repository.
+A. Option A — Clone with Git  
 Type:  
-git clone https://github.com/USH3R/U.S.-Predictive-Supply-Chain-Risk-Mapper.git  
-cd U.S.-Predictive-Supply-Chain-Risk-Mapper  
-bash run.sh  
-
-    B. Option B — Download ZIP  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;git clone https://github.com/USH3R/U.S.-Predictive-Supply-Chain-Risk-Mapper.git  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cd U.S.-Predictive-Supply-Chain-Risk-Mapper  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bash run.sh  
+B. Option B — Download ZIP  
 Click Code → Download ZIP on GitHub.  
 Extract the folder from the ZIP file. Then,  
 Open a terminal in that folder.
 Run / Type: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bash run.sh
-
-    A. Clone with Git, type:  
-        git clone https://github.com/USH3R/U.S.-Predictive-Supply-Chain-Risk-Mapper.git  
-        cd U.S.-Predictive-Supply-Chain-Risk-Mapper  
-        bash run.sh  
-
-    B. Download ZIP  
-        Click Code → Download ZIP on GitHub.  
-        Extract the folder from the ZIP file.  
-        Open a terminal in that folder and run:  
-            bash run.sh  
             
 4. Quick Start Command  
-If you are already in the correct folder, just use:  
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bash run.sh  
-
-## Features
-
+If you are already in the correct folder, just use:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bash run.sh  
+  
+## Features  
 1. **Vendor Risk Collection**
    - Pull CVE feeds, GitHub leaks, and other public signals.
    - Store vendor information and dependencies in a SQL database.
