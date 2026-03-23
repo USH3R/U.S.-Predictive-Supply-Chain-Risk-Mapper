@@ -21,7 +21,7 @@ Run:         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bash run.sh
 When the server starts, open the browser,
 or open the Port tab and then open forwarded port (usually 8050), to view the dashboard.  
   
-3. Run Manually Inside the Repository (Local Machine)  
+2. Run Manually Inside the Repository (Local Machine)  
 If you downloaded or cloned the repository:  
 Open a terminal.  
 Navigate to the project folder.  
@@ -30,7 +30,7 @@ Run the launcher:  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&
 Open your browser and go to:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;http://localhost:8050
 
 3. If You Are Using a Random Public Terminal  
-Public terminals do not automatically have this project. You must first download or clone the repository.
+Public terminals do not automatically have this project. You must first download or clone the repository.  
 A. Option A — Clone with Git  
 Type:  
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;git clone https://github.com/USH3R/U.S.-Predictive-Supply-Chain-Risk-Mapper.git  
