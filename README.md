@@ -10,22 +10,67 @@
 
 The **US Predictive Supply Chain Risk Mapper** is a hackathon-ready cybersecurity tool designed to help federal agencies predict supply chain risk for vendors, visualize dependencies, and provide actionable mitigation strategies. Built entirely in **Python + SQL + Dash**, this tool combines predictive modeling with interactive dashboards for real-time risk assessment.
 ---
-## How to Run the Application
+<u>## How to Run the Application**<u>
+**1. Run in GitHub Codespaces (Recommended)**
 
-**1. In Codespaces (recommended)**
-Open your Codespace terminal and type:
-         
-         bash run.sh
-         
-2. Or try the manual executable way (optional):
-   Open Codespace (Github) or any terminal and type this:
-         
-         chmod +x run.sh
-         
-   Press enter.
-   Then type:
-         
-         ./run.sh
+Open this repository on GitHub.
+
+Click Code → Codespaces → Create Codespace on main.
+
+Wait for the environment to load.
+
+Open the terminal inside Codespaces.
+
+Run:
+bash run.sh
+
+When the server starts, open the forwarded port (usually 8050) to view the dashboard.
+
+2. Run Manually Inside the Repository (Local Machine)
+
+If you downloaded or cloned the repository:
+
+Open a terminal.
+
+Navigate to the project folder.
+
+Example:
+cd US-Predictive-Supply-Chain-Risk-Mapper
+
+Run the launcher:
+bash run.sh
+
+Open your browser and go to:
+http://localhost:8050
+
+3. If You Are Using a Random Public Terminal
+
+Public terminals do not automatically have this project. You must first download or clone the repository.
+
+Option A — Clone with Git
+
+git clone https://github.com/YOUR_USERNAME/REPO_NAME.git
+
+cd REPO_NAME
+
+bash run.sh
+
+Option B — Download ZIP
+
+Click Code → Download ZIP on GitHub.
+
+Extract the folder.
+
+Open a terminal in that folder.
+
+Run:
+bash run.sh
+
+4. Quick Start Command
+
+If you are already in the correct folder, just use:
+
+bash run.sh
          
 ## Features
 
